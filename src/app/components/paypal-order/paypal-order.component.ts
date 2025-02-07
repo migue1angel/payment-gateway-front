@@ -11,13 +11,13 @@ import { PaypalService } from '../../services/paypal.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-paypal',
+  selector: 'paypal-order',
   imports: [],
-  templateUrl: './paypal.component.html',
-  styleUrl: './paypal.component.css',
+  templateUrl: './paypal-order.component.html',
+  styleUrl: './paypal-order.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaypalComponent implements AfterViewInit {
+export class PaypalOrderComponent implements AfterViewInit {
   private readonly paypalService = inject(PaypalService);
 
   public amount = input.required<number | null>();
@@ -31,8 +31,6 @@ export class PaypalComponent implements AfterViewInit {
     try {
       this.paypal = await loadScript({
         clientId: environment.paypalClientId,
-        // vault: true,
-        // intent:'subscription',
         intent: 'capture',
       });
     } catch (error) {
@@ -52,15 +50,9 @@ export class PaypalComponent implements AfterViewInit {
             );
             return orderId;
           },
-          // createSubscription: async (data, actions) => {
-          //   return actions.subscription.create({
-          //     plan_id: 'P-4ML5838709536805LM6STHNQ',
-          //   });
-          // },
 
           onApprove: async (data, actions) => {
             console.log(data);
-
             const response = await firstValueFrom(
               this.paypalService.capturePayment(data.orderID)
             );
