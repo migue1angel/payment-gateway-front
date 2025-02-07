@@ -1,0 +1,22 @@
+<div class="flex h-screen w-screen bg-gray-100  justify-center items-center">
+
+    <!-- Métodos de pagos -->
+
+    <div
+        class="w-full md:w-5/12 flex flex-col justify-start items-center max-h-8/12 overflow-auto  bg-white shadow-lg p-5">
+        <h2 class="text-xl text-green-500 font-bold text-center mb-2">Donación Planting Future</h2>
+        <div class="flex justify-center mt-5 ">
+            <p-iconfield class="w-full">
+                <p-inputnumber [formControl]="amountField" inputId="locale-us" mode="decimal" min="3" locale="en-US"
+                    [minFractionDigits]="2" />
+                <p-inputicon styleClass="pi pi-dollar" />
+            </p-iconfield>
+
+        </div>
+        <div class="w-full mt-5">
+            <app-paypal [amount]="amountField.value"></app-paypal>
+        </div>
+
+
+    </div>
+</div>
