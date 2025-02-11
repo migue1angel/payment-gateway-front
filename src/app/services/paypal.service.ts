@@ -25,7 +25,15 @@ export class PaypalService {
     );
   }
 
-  createPlan(data:CreatePaypalPlan): Observable<string> {
+  captureSubscription(orderId: string): Observable<void> {
+
+    return this.httpClient.post<void>(
+      `${this.apiUrl}/payments/paypal/capture-subscription/${orderId}`,
+      {}
+    );
+  }
+
+  createPlan(data: CreatePaypalPlan): Observable<string> {
     return this.httpClient
       .post<{ id: string }>(`${this.apiUrl}/payments/paypal/plan`, data)
       .pipe(map((res) => res.id));

@@ -20,7 +20,7 @@ import { environment } from '../../../environments/environment';
 export class PaypalOrderComponent implements AfterViewInit {
   private readonly paypalService = inject(PaypalService);
 
-  public amount = input.required<number | null>();
+  public amount = input.required<number|null>();
   private paypal!: PayPalNamespace | null;
 
   ngAfterViewInit(): void {
@@ -52,7 +52,6 @@ export class PaypalOrderComponent implements AfterViewInit {
           },
 
           onApprove: async (data, actions) => {
-            console.log(data);
             const response = await firstValueFrom(
               this.paypalService.capturePayment(data.orderID)
             );

@@ -20,7 +20,7 @@ import { environment } from '../../../environments/environment';
 export class PaypalSubscriptionComponent implements AfterViewInit {
   private readonly paypalService = inject(PaypalService);
 
-  public amount = input.required<number | null>();
+  public amount = input.required<number| null>();
   private paypal!: PayPalNamespace | null;
 
   ngAfterViewInit(): void {
@@ -60,9 +60,12 @@ export class PaypalSubscriptionComponent implements AfterViewInit {
 
           onApprove: async (data, actions) => {
             console.log(data);
-            const response = await firstValueFrom(
-              this.paypalService.capturePayment(data.orderID)
-            );
+            if (data.subscriptionID) {
+              const response = await firstValueFrom(
+                this.paypalService.captureSubscription(data.subscriptionID)
+              );
+              console.log(response);
+            }
             console.log('On approve, redireccionar a la página de donaciones');
           },
           onCancel: async (data, actions) => {
