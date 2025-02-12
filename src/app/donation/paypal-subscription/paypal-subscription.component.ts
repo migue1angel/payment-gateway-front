@@ -1,9 +1,9 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   inject,
   input,
+  OnInit,
 } from '@angular/core';
 import { loadScript, PayPalNamespace } from '@paypal/paypal-js';
 import { firstValueFrom } from 'rxjs';
@@ -12,18 +12,18 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'paypal-subscription',
-  imports: [],
+  standalone: false,
   templateUrl: './paypal-subscription.component.html',
   styleUrl: './paypal-subscription.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaypalSubscriptionComponent implements AfterViewInit {
+export class PaypalSubscriptionComponent implements OnInit {
   private readonly paypalService = inject(PaypalService);
-
-  public amount = input.required<number| null>();
+  public currency = input.required<string | null>();
+  public amount = input.required<number | null>();
   private paypal!: PayPalNamespace | null;
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.setPaypalButtons();
   }
 
@@ -33,6 +33,7 @@ export class PaypalSubscriptionComponent implements AfterViewInit {
         clientId: environment.paypalClientId,
         vault: true,
         intent: 'subscription',
+        currency: this.currency()!,
       });
     } catch (error) {
       console.error('Failed to load the PayPal JS SDK script', error);
@@ -45,12 +46,11 @@ export class PaypalSubscriptionComponent implements AfterViewInit {
           style: {
             label: 'donate',
           },
-
           createSubscription: async (data, actions) => {
             const planId = await firstValueFrom(
               this.paypalService.createPlan({
                 amount: this.amount()!,
-                currency: 'USD',
+                currency: this.currency()!,
               })
             );
             return actions.subscription.create({
@@ -68,7 +68,7 @@ export class PaypalSubscriptionComponent implements AfterViewInit {
             }
             console.log('On approve, redireccionar a la página de donaciones');
           },
-          onCancel: async (data, actions) => {
+          onCancel: (data, actions) => {
             console.log(data, 'order cancelled');
           },
           onError: (data) => {

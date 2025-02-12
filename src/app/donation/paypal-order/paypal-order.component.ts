@@ -1,9 +1,9 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   inject,
   input,
+  OnInit,
 } from '@angular/core';
 import { loadScript, PayPalNamespace } from '@paypal/paypal-js';
 import { firstValueFrom } from 'rxjs';
@@ -12,18 +12,18 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'paypal-order',
-  imports: [],
+  standalone: false,
   templateUrl: './paypal-order.component.html',
   styleUrl: './paypal-order.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaypalOrderComponent implements AfterViewInit {
+export class PaypalOrderComponent implements OnInit {
   private readonly paypalService = inject(PaypalService);
 
-  public amount = input.required<number|null>();
+  public amount = input.required<number | null>();
+  public currency = input.required<string | null>();
   private paypal!: PayPalNamespace | null;
-
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.setPaypalButtons();
   }
 
@@ -32,6 +32,7 @@ export class PaypalOrderComponent implements AfterViewInit {
       this.paypal = await loadScript({
         clientId: environment.paypalClientId,
         intent: 'capture',
+        currency: this.currency()!,
       });
     } catch (error) {
       console.error('Failed to load the PayPal JS SDK script', error);
@@ -43,10 +44,12 @@ export class PaypalOrderComponent implements AfterViewInit {
           style: {
             label: 'donate',
           },
-
+          onInit: (_, actions) => {
+            
+          },
           createOrder: async () => {
             const orderId = await firstValueFrom(
-              this.paypalService.createOrder(this.amount()!)
+              this.paypalService.createOrder(this.amount()!, this.currency()!)
             );
             return orderId;
           },

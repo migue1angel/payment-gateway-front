@@ -2,7 +2,8 @@
 
     <!-- Métodos de pagos -->
 
-    <div class="w-full md:w-5/12 flex flex-col justify-start items-center max-h-8/12 overflow-auto bg-white shadow-lg p-5">
+    <div
+        class="w-full md:w-5/12 flex flex-col justify-start items-center max-h-8/12 overflow-auto bg-white shadow-lg p-5">
 
         <h2 class="text-xl text-green-500 font-bold text-center mb-2">Donación Planting Future</h2>
 
@@ -10,20 +11,25 @@
             [options]="[{label:'Una vez',value:true},{label:'Mensual',value:false}]" optionLabel="label"
             optionValue="value" aria-labelledby="basic" class="w-full" />
 
-        <div class="flex justify-center mt-5 w-full">
+        <div class="flex flex-col md:flex-row justify-center gap-2 mt-5 w-full">
+
             <p-iconfield class="w-full">
-                <p-inputnumber [formControl]="amountField" mode="decimal" min="3" currency="USD" [minFractionDigits]="2"
+                <p-inputnumber [formControl]="amountField" mode="currency" min="3" [currency]="currencyField.value!"
                     class="w-full" />
                 <p-inputicon styleClass="pi pi-money-bill" />
             </p-iconfield>
-        </div>
 
-        <div class="w-11/12 mt-5">
+            <p-select [options]="currencies" fluid="true" [formControl]="currencyField" optionLabel="label"
+                placeholder="Select a currency" optionValue="value" />
+
+        </div>
+        <div class="w-full mt-5 transition-all duration-700 ease-in-out">
             @if (paymentOption.value) {
-            <paypal-order [amount]="amountField.value" class="w-full"></paypal-order>
+            <paypal-order [amount]="amountField.value" [currency]="currencyField.value"></paypal-order>
             }@else {
-            <paypal-subscription [amount]="amountField.value" class="w-full"></paypal-subscription>
+            <paypal-subscription [amount]="amountField.value" [currency]="currencyField.value"></paypal-subscription>
             }
         </div>
     </div>
+
 </div>
