@@ -11,9 +11,9 @@ export class PaypalService {
   private readonly httpClient = inject(HttpClient);
   private readonly apiUrl = environment.baseApiUrl;
 
-  createOrder(amount: number): Observable<string> {
+  createOrder(amount: number, currency:string): Observable<string> {
     return this.httpClient
-      .post<{ id: string }>(`${this.apiUrl}/payments/paypal/create`, { amount })
+      .post<{ id: string }>(`${this.apiUrl}/payments/paypal/create`, { amount, currency })
       .pipe(map((res) => res.id));
   }
 

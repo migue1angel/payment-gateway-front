@@ -10,19 +10,23 @@ import { DonationComponent } from './donation.component';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
 
 @NgModule({
-  declarations: [DonationComponent],
+  declarations: [
+    DonationComponent,
+    PaypalOrderComponent,
+    PaypalSubscriptionComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     DonationRoutingModule,
-    PaypalOrderComponent,
-    PaypalSubscriptionComponent,
     SelectButtonModule,
     IconFieldModule,
     InputIconModule,
-    InputNumberModule
+    SelectModule,
+    InputNumberModule,
   ],
 })
 export class DonationModule {}
